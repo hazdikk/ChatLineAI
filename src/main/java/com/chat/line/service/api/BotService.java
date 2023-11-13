@@ -10,7 +10,11 @@ import java.util.function.Consumer;
 
 public interface BotService {
 
-  void handleTextContent(String replyToken, MessageEvent event, TextMessageContent content) throws JsonProcessingException, URISyntaxException;
+  void handleTextContent(String replyToken, MessageEvent event, TextMessageContent content)
+      throws JsonProcessingException, URISyntaxException;
+
+  String handleTextContentAndReturnResponse(String model, String message, String sourceId)
+      throws JsonProcessingException;
 
   void handleHeavyContent(String replyToken, String messageId,
       Consumer<BlobContent> messageConsumer);

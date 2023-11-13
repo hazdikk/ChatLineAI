@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Configuration
 public class BeanConfig {
 
@@ -15,5 +19,10 @@ public class BeanConfig {
     requestFactory.setReadTimeout(30000);
 
     return new RestTemplate(requestFactory);
+  }
+
+  @Bean
+  public Map<String, List<String>> conversationsByName() {
+    return new ConcurrentHashMap<>();
   }
 }

@@ -3,6 +3,7 @@ package com.chat.line.service.api.impl;
 import com.chat.line.model.constant.ModelNames;
 import com.chat.line.model.constant.RoleNames;
 import com.chat.line.model.entity.ChatMessage;
+import com.chat.line.model.entity.ChatRequest;
 import com.chat.line.model.entity.ImageData;
 import com.chat.line.model.entity.ImageRequest;
 import com.chat.line.model.entity.ImageResponse;
@@ -30,7 +31,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -41,6 +44,7 @@ import static java.util.Collections.singletonList;
 @RequiredArgsConstructor
 public class BotServiceImpl implements BotService {
 
+  private final Map<String, List<String>> conversationsByName;
   private final MessagingApiClient messagingApiClient;
   private final ChatGptService chatGptService;
 
@@ -49,28 +53,36 @@ public class BotServiceImpl implements BotService {
       throws JsonProcessingException, URISyntaxException {
     PromptType promptType = PromptType.getPromptTypeOrDefault(content.text());
     String prompt = ChatHelper.getPrompt(promptType, content.text());
+    String sourceId = ChatHelper.constructSourceId(event);
 
-    this.handleTextContent(replyToken, promptType, prompt);
+    this.handleTextContent(replyToken, promptType, prompt, sourceId);
   }
 
-  private void handleTextContent(String replyToken, PromptType promptType, String prompt)
-      throws JsonProcessingException, URISyntaxException {
+  private void handleTextContent(String replyToken, PromptType promptType, String prompt,
+      String sourceId) throws JsonProcessingException, URISyntaxException {
     if (PromptType.GPT_4.equals(promptType)) {
-      this.handleTextContentAndReplyText(replyToken, ModelNames.GPT_4, prompt);
+      this.handleTextContentAndReplyText(replyToken, ModelNames.GPT_4, prompt, sourceId);
     } else if (PromptType.CREATE_IMAGE.equals(promptType)) {
       this.handleTextContentAndReplyImage(replyToken, prompt);
     } else {
-      this.handleTextContentAndReplyText(replyToken, ModelNames.DEFAULT, prompt);
+      this.handleTextContentAndReplyText(replyToken, ModelNames.DEFAULT, prompt, sourceId);
     }
   }
-  
-  private void handleTextContentAndReplyText(String replyToken, String model, String content)
-      throws JsonProcessingException {
-    ChatMessage userMessage = ChatGptHelper.constructMessage(RoleNames.USER, content);
-    ChatMessage message =
-        this.chatGptService.chat(ChatGptHelper.constructCompletionsRequest(model, userMessage));
 
-    this.reply(replyToken, new TextMessage(message.getContent()));
+  private void handleTextContentAndReplyText(String replyToken, String model, String message,
+      String sourceId) throws JsonProcessingException {
+    this.reply(replyToken,
+        new TextMessage(this.handleTextContentAndReturnResponse(model, message, sourceId)));
+  }
+  
+  @Override
+  public String handleTextContentAndReturnResponse(String model, String message, String sourceId)
+      throws JsonProcessingException {
+    List<String> messages = ChatHelper.getUserMessages(conversationsByName, sourceId, message);
+    List<ChatMessage> userMessages = ChatGptHelper.constructUserMessages(messages);
+
+    return this.chatGptService.chat(ChatGptHelper.constructCompletionsRequest(model, userMessages))
+        .getContent();
   }
 
   private void handleTextContentAndReplyImage(String replyToken, String content)

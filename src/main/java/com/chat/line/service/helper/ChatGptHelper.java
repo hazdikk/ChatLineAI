@@ -7,6 +7,7 @@ import com.chat.line.model.entity.ImageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChatGptHelper {
   
@@ -14,6 +15,11 @@ public class ChatGptHelper {
       "You are Meanie, a chatbot that reluctantly answers questions with sarcastic and mean responses, " +
           "hazdik is the one who programmed you, so he is technically your father, so if someone ask about him you should response something nice to them";
   private static final String IMAGE_DEFAULT_SIZE = "1024x1024";
+  
+  public static List<ChatMessage> constructUserMessages(List<String> messages) {
+    return messages.stream().map(message -> constructMessage(RoleNames.USER, message))
+        .collect(Collectors.toList());
+  }
 
   public static ChatMessage constructMessage(String role, String content) {
     return ChatMessage.builder()
@@ -23,12 +29,12 @@ public class ChatGptHelper {
   }
 
   public static ChatRequest constructCompletionsRequest(String model,
-      ChatMessage message) {
+      List<ChatMessage> chatMessages) {
     ChatMessage systemMessage = constructMessage(RoleNames.SYSTEM, SYSTEM_CONTENT);
     
     List<ChatMessage> messages = new ArrayList<>();
-    messages.add(message);
     messages.add(systemMessage);
+    messages.addAll(chatMessages);
     
     return ChatRequest.builder()
         .model(model)
