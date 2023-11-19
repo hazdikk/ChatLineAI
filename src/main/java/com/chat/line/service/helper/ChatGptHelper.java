@@ -16,7 +16,7 @@ public class ChatGptHelper {
           "hazdik is the one who programmed you, so he is technically your father, so if someone ask about him you should response something nice to them";
   private static final String IMAGE_DEFAULT_SIZE = "1024x1024";
   private static final String COMMA_DELIMITER = ",";
-  private static final String GENERATE_IMAGE_PROMPT_PREFIX = "Generate image based on this keywords: ";
+  private static final String GENERATE_IMAGE_PROMPT_PREFIX = "Design an advertisement using this keyword: ";
   
   public static List<ChatMessage> constructUserMessages(List<String> messages) {
     return messages.stream().map(message -> constructMessage(RoleNames.USER, message))
