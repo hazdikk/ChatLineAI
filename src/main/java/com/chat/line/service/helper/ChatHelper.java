@@ -42,9 +42,9 @@ public class ChatHelper {
 
   public static String constructSourceId(MessageEvent event) {
     if (event.source() instanceof GroupSource groupSource) {
-      return groupSource.groupId() + DASH_DELIMITER + groupSource.userId();
+      return groupSource.groupId();
     } else if (event.source() instanceof RoomSource roomSource) {
-      return roomSource.roomId() + DASH_DELIMITER + roomSource.userId();
+      return roomSource.roomId();
     } else if (event.source() instanceof UserSource userSource) {
       return PRIVATE_CHAT_PREFIX + DASH_DELIMITER + userSource.userId();
     } else {

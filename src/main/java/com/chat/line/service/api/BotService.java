@@ -5,6 +5,7 @@ import com.linecorp.bot.client.base.BlobContent;
 import com.linecorp.bot.webhook.model.MessageEvent;
 import com.linecorp.bot.webhook.model.TextMessageContent;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Consumer;
 
@@ -15,6 +16,8 @@ public interface BotService {
 
   String handleTextContentAndReturnResponse(String model, String message, String sourceId)
       throws JsonProcessingException;
+
+  URI generateImage(String content) throws URISyntaxException, JsonProcessingException;
 
   void handleHeavyContent(String replyToken, String messageId,
       Consumer<BlobContent> messageConsumer);

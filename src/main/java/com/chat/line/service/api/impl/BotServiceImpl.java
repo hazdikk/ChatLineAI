@@ -87,11 +87,17 @@ public class BotServiceImpl implements BotService {
 
   private void handleTextContentAndReplyImage(String replyToken, String content)
       throws JsonProcessingException, URISyntaxException {
+    URI uri = this.generateImage(content);
+
+    this.reply(replyToken, new ImageMessage(uri, uri));
+  }
+
+  @Override
+  public URI generateImage(String content) throws URISyntaxException, JsonProcessingException {
     ImageRequest imageRequest = ChatGptHelper.constructImageRequest(content);
     ImageData imageData = this.chatGptService.generateImage(imageRequest);
 
-    URI uri = new URI(imageData.getUrl());
-    this.reply(replyToken, new ImageMessage(uri, uri));
+    return new URI(imageData.getUrl());
   }
 
   @Override

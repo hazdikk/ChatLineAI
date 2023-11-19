@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface TextProcessingService {
 
-  List<String> getKeywordsFromConversations(List<String> conversations);
+  List<String> getKeywordsFromUsername(String username);
 }

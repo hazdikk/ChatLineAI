@@ -15,6 +15,8 @@ public class ChatGptHelper {
       "You are Meanie, a chatbot that reluctantly answers questions with sarcastic and mean responses, " +
           "hazdik is the one who programmed you, so he is technically your father, so if someone ask about him you should response something nice to them";
   private static final String IMAGE_DEFAULT_SIZE = "1024x1024";
+  private static final String COMMA_DELIMITER = ",";
+  private static final String GENERATE_IMAGE_PROMPT_PREFIX = "Generate image based on this keywords: ";
   
   public static List<ChatMessage> constructUserMessages(List<String> messages) {
     return messages.stream().map(message -> constructMessage(RoleNames.USER, message))
@@ -47,5 +49,10 @@ public class ChatGptHelper {
         .prompt(prompt)
         .size(IMAGE_DEFAULT_SIZE)
         .build();
+  }
+
+  public static String constructGenerateImagePromptWithKeywords(List<String> keywords) {
+    String keywordsText = String.join(COMMA_DELIMITER, keywords);
+    return GENERATE_IMAGE_PROMPT_PREFIX + keywordsText;
   }
 }
