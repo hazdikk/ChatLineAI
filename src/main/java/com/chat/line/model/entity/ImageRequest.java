@@ -16,6 +16,8 @@ public class ImageRequest implements Serializable {
   @Serial
   private static final long serialVersionUID = -3922230846196497597L;
 
+  private String model;
   private String prompt;
   private String size;
+  private String quality;
 }

@@ -1,5 +1,7 @@
 package com.chat.line.service.helper;
 
+import com.chat.line.model.constant.ImageQualityNames;
+import com.chat.line.model.constant.ModelNames;
 import com.chat.line.model.constant.RoleNames;
 import com.chat.line.model.entity.ChatRequest;
 import com.chat.line.model.entity.ChatMessage;
@@ -46,8 +48,10 @@ public class ChatGptHelper {
 
   public static ImageRequest constructImageRequest(String prompt){
     return ImageRequest.builder()
+        .model(ModelNames.DALL_E_3)
         .prompt(prompt)
         .size(IMAGE_DEFAULT_SIZE)
+        .quality(ImageQualityNames.HD)
         .build();
   }
 
