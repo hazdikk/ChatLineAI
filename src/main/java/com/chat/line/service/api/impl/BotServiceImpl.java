@@ -69,6 +69,9 @@ public class BotServiceImpl implements BotService {
     } else if (PromptType.KEYWORD.equals(promptType)) {
       List<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
       this.reply(replyToken, new TextMessage(String.join(",", keywords)));
+    } else if (PromptType.ADS.equals(promptType)) {
+      List<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
+      this.replyImageFromKeywords(replyToken, keywords);
     } else {
       this.handleTextContentAndReplyText(replyToken, ModelNames.DEFAULT, prompt, sourceId);
     }
@@ -88,6 +91,13 @@ public class BotServiceImpl implements BotService {
 
     return this.chatGptService.chat(ChatGptHelper.constructCompletionsRequest(model, userMessages))
         .getContent();
+  }
+  
+  private void replyImageFromKeywords(String replyToken, List<String> keywords)
+      throws URISyntaxException, JsonProcessingException {
+    URI generatedImageUri = this.generateImageByKeywords(keywords);
+
+    this.reply(replyToken, new ImageMessage(generatedImageUri, generatedImageUri));
   }
 
   private void handleTextContentAndReplyImage(String replyToken, String content)

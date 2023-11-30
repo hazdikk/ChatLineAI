@@ -8,6 +8,7 @@ public enum PromptType {
   GPT_4("!gpt4"),
   CREATE_IMAGE("!image"),
   KEYWORD("!keyword"),
+  ADS("!ads"),
   DEFAULT("!");
 
   private final String value;
@@ -23,6 +24,8 @@ public enum PromptType {
       return CREATE_IMAGE;
     } else if (input.startsWith(KEYWORD.value)) {
       return KEYWORD;
+    } else if (input.startsWith(ADS.value)) {
+      return ADS;
     } else {
       return DEFAULT;
     }
