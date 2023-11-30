@@ -57,6 +57,6 @@ public class ChatController {
 
     URI imageUri = this.botService.generateImageByKeywords(keywords);
 
-    return ResponseEntity.ok(imageUri.toString());
+    return ResponseEntity.ok(imageUri.toString().trim());
   }
 }
