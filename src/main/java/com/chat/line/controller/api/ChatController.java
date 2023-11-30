@@ -55,8 +55,7 @@ public class ChatController {
     username = ChatHelper.constructWebSourceId(username);
     List<String> keywords = this.textProcessingService.getKeywordsFromUsername(username);
 
-    String generateImagePrompt = ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords);
-    URI imageUri = this.botService.generateImage(generateImagePrompt);
+    URI imageUri = this.botService.generateImageByKeywords(keywords);
 
     return ResponseEntity.ok(imageUri.toString());
   }

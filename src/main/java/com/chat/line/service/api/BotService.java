@@ -7,6 +7,7 @@ import com.linecorp.bot.webhook.model.TextMessageContent;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface BotService {
@@ -16,6 +17,8 @@ public interface BotService {
 
   String handleTextContentAndReturnResponse(String model, String message, String sourceId)
       throws JsonProcessingException;
+
+  URI generateImageByKeywords(List<String> keywords) throws URISyntaxException, JsonProcessingException;
 
   URI generateImage(String content) throws URISyntaxException, JsonProcessingException;
 

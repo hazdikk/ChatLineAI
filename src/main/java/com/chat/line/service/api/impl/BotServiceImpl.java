@@ -93,6 +93,13 @@ public class BotServiceImpl implements BotService {
   }
 
   @Override
+  public URI generateImageByKeywords(List<String> keywords)
+      throws URISyntaxException, JsonProcessingException {
+    String generateImagePrompt = ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords);
+    return this.generateImage(generateImagePrompt);
+  }
+
+  @Override
   public URI generateImage(String content) throws URISyntaxException, JsonProcessingException {
     ImageRequest imageRequest = ChatGptHelper.constructImageRequest(content);
     ImageData imageData = this.chatGptService.generateImage(imageRequest);
