@@ -10,6 +10,7 @@ import com.chat.line.model.entity.ImageResponse;
 import com.chat.line.model.enums.PromptType;
 import com.chat.line.service.api.BotService;
 import com.chat.line.service.api.ChatGptService;
+import com.chat.line.service.api.TextProcessingService;
 import com.chat.line.service.helper.ChatGptHelper;
 import com.chat.line.service.helper.ChatHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,6 +48,7 @@ public class BotServiceImpl implements BotService {
   private final Map<String, List<String>> conversationsByName;
   private final MessagingApiClient messagingApiClient;
   private final ChatGptService chatGptService;
+  private final TextProcessingService textProcessingService;
 
   @Override
   public void handleTextContent(String replyToken, MessageEvent event, TextMessageContent content)
@@ -64,6 +66,9 @@ public class BotServiceImpl implements BotService {
       this.handleTextContentAndReplyText(replyToken, ModelNames.GPT_4, prompt, sourceId);
     } else if (PromptType.CREATE_IMAGE.equals(promptType)) {
       this.handleTextContentAndReplyImage(replyToken, prompt);
+    } else if (PromptType.KEYWORD.equals(promptType)) {
+      List<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
+      this.reply(replyToken, new TextMessage(String.join(",", keywords)));
     } else {
       this.handleTextContentAndReplyText(replyToken, ModelNames.DEFAULT, prompt, sourceId);
     }

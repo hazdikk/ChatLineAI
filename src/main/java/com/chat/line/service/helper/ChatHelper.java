@@ -5,11 +5,13 @@ import com.linecorp.bot.webhook.model.GroupSource;
 import com.linecorp.bot.webhook.model.MessageEvent;
 import com.linecorp.bot.webhook.model.RoomSource;
 import com.linecorp.bot.webhook.model.UserSource;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ChatHelper {
 
   private static final String SPACE_DELIMITER = " ";
@@ -36,6 +38,8 @@ public class ChatHelper {
       lastUserMessages.remove(0);
     }
     lastUserMessages.add(newMessage);
+
+    log.info("#recentConversationWithUser {}", lastUserMessages);
 
     return lastUserMessages;
   }
