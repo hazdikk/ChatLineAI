@@ -56,9 +56,10 @@ public class ChatGptHelper {
         .build();
   }
 
-  public static String constructGenerateImagePromptWithKeywords(List<String> keywords, String promptPrefix) {
+  public static String constructGenerateImagePromptWithKeywords(List<String> keywords,
+      String prompt) {
     String keywordsText = constructFormattedKeywords(keywords);
-    return promptPrefix + SPACE_DELIMITER + keywordsText;
+    return String.format(prompt, keywordsText);
   }
 
   private static String constructFormattedKeywords(List<String> keywords) {

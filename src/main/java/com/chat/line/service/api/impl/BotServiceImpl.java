@@ -52,7 +52,7 @@ public class BotServiceImpl implements BotService {
   private final TextProcessingService textProcessingService;
 
   @Value("${gpt.generate-image-prompt}")
-  private String generateImagePromptPrefix;
+  private String generateImagePrompt;
 
   @Value("${gpt.system-content-prompt-default}")
   private String systemContentPromptDefault;
@@ -118,9 +118,9 @@ public class BotServiceImpl implements BotService {
   @Override
   public URI generateImageByKeywords(List<String> keywords)
       throws URISyntaxException, JsonProcessingException {
-    String generateImagePrompt =
-        ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords, generateImagePromptPrefix);
-    return this.generateImage(generateImagePrompt);
+    String prompt =
+        ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords, generateImagePrompt);
+    return this.generateImage(prompt);
   }
 
   @Override
