@@ -26,6 +26,7 @@ import com.linecorp.bot.webhook.model.MessageEvent;
 import com.linecorp.bot.webhook.model.TextMessageContent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -49,6 +50,12 @@ public class BotServiceImpl implements BotService {
   private final MessagingApiClient messagingApiClient;
   private final ChatGptService chatGptService;
   private final TextProcessingService textProcessingService;
+
+  @Value("${gpt.generate-image-prompt}")
+  private String generateImagePromptPrefix;
+
+  @Value("${gpt.system-content-prompt-default}")
+  private String systemContentPromptDefault;
 
   @Override
   public void handleTextContent(String replyToken, MessageEvent event, TextMessageContent content)
@@ -89,7 +96,8 @@ public class BotServiceImpl implements BotService {
     List<String> messages = ChatHelper.getUserMessages(conversationsByName, sourceId, message);
     List<ChatMessage> userMessages = ChatGptHelper.constructUserMessages(messages);
 
-    return this.chatGptService.chat(ChatGptHelper.constructCompletionsRequest(model, userMessages))
+    return this.chatGptService.chat(
+        ChatGptHelper.constructCompletionsRequest(model, userMessages, systemContentPromptDefault))
         .getContent();
   }
   
@@ -110,7 +118,8 @@ public class BotServiceImpl implements BotService {
   @Override
   public URI generateImageByKeywords(List<String> keywords)
       throws URISyntaxException, JsonProcessingException {
-    String generateImagePrompt = ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords);
+    String generateImagePrompt =
+        ChatGptHelper.constructGenerateImagePromptWithKeywords(keywords, generateImagePromptPrefix);
     return this.generateImage(generateImagePrompt);
   }
 

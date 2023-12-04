@@ -18,6 +18,7 @@ public class ChatGptHelper {
           "hazdik is the one who programmed you, so he is technically your father, so if someone ask about him you should response something nice to them";
   private static final String IMAGE_DEFAULT_SIZE = "1024x1024";
   private static final String COMMA_DELIMITER = ",";
+  private static final String SPACE_DELIMITER = " ";
   private static final String GENERATE_IMAGE_PROMPT_PREFIX = "Design an advertisement using this keyword: ";
   
   public static List<ChatMessage> constructUserMessages(List<String> messages) {
@@ -33,8 +34,8 @@ public class ChatGptHelper {
   }
 
   public static ChatRequest constructCompletionsRequest(String model,
-      List<ChatMessage> chatMessages) {
-    ChatMessage systemMessage = constructMessage(RoleNames.SYSTEM, SYSTEM_CONTENT);
+      List<ChatMessage> chatMessages, String systemContentPrompt) {
+    ChatMessage systemMessage = constructMessage(RoleNames.SYSTEM, systemContentPrompt);
     
     List<ChatMessage> messages = new ArrayList<>();
     messages.add(systemMessage);
@@ -55,8 +56,28 @@ public class ChatGptHelper {
         .build();
   }
 
-  public static String constructGenerateImagePromptWithKeywords(List<String> keywords) {
-    String keywordsText = String.join(COMMA_DELIMITER, keywords);
-    return GENERATE_IMAGE_PROMPT_PREFIX + keywordsText;
+  public static String constructGenerateImagePromptWithKeywords(List<String> keywords, String promptPrefix) {
+    String keywordsText = constructFormattedKeywords(keywords);
+    return promptPrefix + SPACE_DELIMITER + keywordsText;
+  }
+
+  private static String constructFormattedKeywords(List<String> keywords) {
+    if (keywords.isEmpty()) {
+      return "";
+    }
+
+    if (keywords.size() == 1) {
+      return "\"" + keywords.get(0) + "\"";
+    }
+
+    String result = keywords.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
+
+    int lastCommaIndex = result.lastIndexOf(",");
+    if (lastCommaIndex != -1) {
+      return result.substring(0, lastCommaIndex) + ", and" + result.substring(lastCommaIndex + 1);
+    }
+
+    return result;
+
   }
 }
