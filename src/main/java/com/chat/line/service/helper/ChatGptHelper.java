@@ -71,7 +71,8 @@ public class ChatGptHelper {
       return "\"" + keywords.get(0) + "\"";
     }
 
-    String result = keywords.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "));
+    String result =
+        keywords.stream().map(keyword -> "\"" + keyword + "\"").collect(Collectors.joining(", "));
 
     int lastCommaIndex = result.lastIndexOf(",");
     if (lastCommaIndex != -1) {
