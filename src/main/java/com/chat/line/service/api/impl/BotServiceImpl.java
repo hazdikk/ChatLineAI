@@ -31,10 +31,12 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -74,11 +76,11 @@ public class BotServiceImpl implements BotService {
     } else if (PromptType.CREATE_IMAGE.equals(promptType)) {
       this.handleTextContentAndReplyImage(replyToken, prompt);
     } else if (PromptType.KEYWORD.equals(promptType)) {
-      List<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
+      Set<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
       this.reply(replyToken, new TextMessage(String.join(",", keywords)));
     } else if (PromptType.ADS.equals(promptType)) {
-      List<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
-      this.replyImageFromKeywords(replyToken, keywords);
+      Set<String> keywords = this.textProcessingService.getKeywordsFromUsername(sourceId);
+      this.replyImageFromKeywords(replyToken, new ArrayList<>(keywords));
     } else {
       this.handleTextContentAndReplyText(replyToken, ModelNames.DEFAULT, prompt, sourceId);
     }

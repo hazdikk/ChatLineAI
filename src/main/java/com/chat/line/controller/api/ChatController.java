@@ -19,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -34,7 +36,7 @@ public class ChatController {
   @GetMapping(value = "/get-keywords")
   public ResponseEntity<String> getKeywords(@RequestParam String username) {
     username = ChatHelper.constructWebSourceId(username);
-    List<String> keywords = this.textProcessingService.getKeywordsFromUsername(username);
+    Set<String> keywords = this.textProcessingService.getKeywordsFromUsername(username);
 
     return ResponseEntity.ok(String.join(",", keywords));
   }
@@ -53,9 +55,9 @@ public class ChatController {
   public ResponseEntity<String> generateImage(@RequestParam String username)
       throws URISyntaxException, JsonProcessingException {
     username = ChatHelper.constructWebSourceId(username);
-    List<String> keywords = this.textProcessingService.getKeywordsFromUsername(username);
+    Set<String> keywords = this.textProcessingService.getKeywordsFromUsername(username);
 
-    URI imageUri = this.botService.generateImageByKeywords(keywords);
+    URI imageUri = this.botService.generateImageByKeywords(new ArrayList<>(keywords));
 
     return ResponseEntity.ok(imageUri.toString().trim());
   }

@@ -1,8 +1,9 @@
 package com.chat.line.service.api;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TextProcessingService {
 
-  List<String> getKeywordsFromUsername(String username);
+  Set<String> getKeywordsFromUsername(String username);
 }
