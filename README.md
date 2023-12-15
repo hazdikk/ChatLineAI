@@ -4,8 +4,8 @@ ChatLineAI is a project that integrates OpenAI's GPT-3 model with the LINE messa
 
 ## Prerequisites
 
-- Java 17
-- Maven
+- [Java 17](https://bell-sw.com/pages/downloads/#/java-17-lts)
+- [Maven](https://maven.apache.org/)
 
 ## Installation
 
