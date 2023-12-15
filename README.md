@@ -57,7 +57,7 @@ If you encounter issues related to the Java version, follow these steps:
 
    The output should indicate Java 17.
 
-2. If Java 17 is not installed, download and install it from [Oracle's Java 17 download page](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
+2. If Java 17 is not installed, download and install it from [BellSoft Liberica JDK 17 download page](https://bell-sw.com/pages/downloads/#/java-17-lts).
 
 3. Set Java 17 as your `JAVA_HOME`:
 
